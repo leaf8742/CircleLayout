@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		094F59FA19E8E0EA009BB2CA /* CollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 094F59F919E8E0EA009BB2CA /* CollectionView.m */; };
-		099D12571A4A51C3002B6253 /* scroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 099D12561A4A51C3002B6253 /* scroll.m */; };
 		09E8C3751A6505130065E24D /* CoordinatingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E8C3741A6505130065E24D /* CoordinatingController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		09FEB61E19B6B50B00952538 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FEB61D19B6B50B00952538 /* Default-568h@2x.png */; };
 		77AF0077157FA442001EC3FB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77AF0076157FA442001EC3FB /* UIKit.framework */; };
@@ -27,12 +26,10 @@
 /* Begin PBXFileReference section */
 		094F59F819E8E0EA009BB2CA /* CollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionView.h; sourceTree = "<group>"; };
 		094F59F919E8E0EA009BB2CA /* CollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionView.m; sourceTree = "<group>"; };
-		099D12551A4A51C3002B6253 /* scroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scroll.h; sourceTree = "<group>"; };
-		099D12561A4A51C3002B6253 /* scroll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = scroll.m; sourceTree = "<group>"; };
 		09E8C3731A6505130065E24D /* CoordinatingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoordinatingController.h; sourceTree = "<group>"; };
 		09E8C3741A6505130065E24D /* CoordinatingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoordinatingController.m; sourceTree = "<group>"; };
 		09FEB61D19B6B50B00952538 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		28B8D5C415817E9B00386DDB /* ReadMe.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		28B8D5C415817E9B00386DDB /* ReadMe.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ReadMe.md; sourceTree = "<group>"; };
 		2C6F8DB926310C673983B80C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		77AF0072157FA442001EC3FB /* CircleLayout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CircleLayout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77AF0076157FA442001EC3FB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -84,7 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				09FEB61D19B6B50B00952538 /* Default-568h@2x.png */,
-				28B8D5C415817E9B00386DDB /* ReadMe.txt */,
+				28B8D5C415817E9B00386DDB /* ReadMe.md */,
 				77AF007C157FA442001EC3FB /* CircleLayout */,
 				77AF0075157FA442001EC3FB /* Frameworks */,
 				77AF0073157FA442001EC3FB /* Products */,
@@ -127,8 +124,6 @@
 				094F59F819E8E0EA009BB2CA /* CollectionView.h */,
 				094F59F919E8E0EA009BB2CA /* CollectionView.m */,
 				77AF007D157FA442001EC3FB /* Supporting Files */,
-				099D12551A4A51C3002B6253 /* scroll.h */,
-				099D12561A4A51C3002B6253 /* scroll.m */,
 			);
 			path = CircleLayout;
 			sourceTree = "<group>";
@@ -261,7 +256,6 @@
 				77AF0087157FA442001EC3FB /* AppDelegate.m in Sources */,
 				77AF008A157FA442001EC3FB /* ViewController.m in Sources */,
 				77AF0097157FA528001EC3FB /* Cell.m in Sources */,
-				099D12571A4A51C3002B6253 /* scroll.m in Sources */,
 				094F59FA19E8E0EA009BB2CA /* CollectionView.m in Sources */,
 				77AF0098157FA528001EC3FB /* CircleLayout.m in Sources */,
 			);
