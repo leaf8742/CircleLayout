@@ -49,7 +49,7 @@
 
 #pragma mark - UICollectionViewDelegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    [self setTitle:[NSString stringWithFormat:@"%d", [indexPath row]]];
+    [self setTitle:[NSString stringWithFormat:@"%ld", (long)[indexPath row]]];
     [[[CoordinatingController sharedInstance] rootViewController] setNavigationBarHidden:NO animated:YES];
 }
 

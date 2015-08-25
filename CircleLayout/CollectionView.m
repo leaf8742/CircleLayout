@@ -28,7 +28,12 @@ CGPoint pointAddVector(CGPoint point, CGPoint vector) {
 
 @interface CollectionView ()
 
-@property (assign, nonatomic) CGFloat lastAngle;
+/// @brief 当前的旋转弧度
+@property (assign, nonatomic) CGFloat currentAngle;
+
+@property (assign, nonatomic) CGFloat startRotate;
+
+@property (assign, nonatomic) CGFloat sum_increment;
 
 /// @brief 当前滚动是否为顺时针滚动
 @property (assign, nonatomic) BOOL clockwise;
@@ -36,38 +41,12 @@ CGPoint pointAddVector(CGPoint point, CGPoint vector) {
 /// @brief 二次构建
 @property (nonatomic, retain) CircleLayout *collectionViewLayout;
 
-//@property (nonatomic, retain) UITouch *currentTouch;
-
-/**
- UITableView
- UITouch *_currentTouch;
- 
- UIScrollView
- struct CGPoint _pageDecelerationTarget;
- struct CGSize _decelerationFactor;
- struct CGPoint _adjustedDecelerationTarget;
- struct CGSize _adjustedDecelerationFactor;
- double _decelerationLnFactorH;
- double _decelerationLnFactorV;
- struct CGSize _accumulatedOffset;
- double _accuracy;
- 
- -[UIScrollView _rubberBandContentOffsetForOffset:outsideX:outsideY:]
- -[UIScrollView _rubberBandOffsetForOffset:maxOffset:minOffset:range:outside:]
- -[UIScrollView _rubberBandToOffset:] ^
- -[UIScrollView _updatePanGesture]
- -[UIScrollView handlePan:]
- doubleBounds
- setNeedsLayoutOnGeometryChange
- floor
- floorf
- roundf
- round
- */
 @end
 
 
 @implementation CollectionView
+
+@dynamic collectionViewLayout;
 
 #pragma mark - Override
 - (id)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout *)layout{
@@ -75,7 +54,7 @@ CGPoint pointAddVector(CGPoint point, CGPoint vector) {
         UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
         [self addGestureRecognizer:panRecognizer];
         
-        self.lastAngle = radians(CGPointMake(0, 0), CGPointMake(1, 0));
+        self.currentAngle = radians(CGPointMake(0, 0), CGPointMake(1, 0));
     }
     return self;
 }
@@ -85,26 +64,32 @@ CGPoint pointAddVector(CGPoint point, CGPoint vector) {
     
     if (sender.state == UIGestureRecognizerStateBegan) {
         [self.collectionViewLayout pop_removeAllAnimations];
-        self.lastAngle = radians(CGPointMake(0, self.center.y)/* self.center*/, [sender locationInView:self]);
+        self.currentAngle = radians(CGPointMake(0, self.center.y)/* self.center*/, [sender locationInView:self]);
+        self.startRotate = self.collectionViewLayout.rotate;
+        self.sum_increment = 0;
     } else if (sender.state == UIGestureRecognizerStateChanged) {
         [self.collectionViewLayout pop_removeAllAnimations];
         
+        CGFloat rotate = self.startRotate;
         CGFloat theta = radians(CGPointMake(0, self.center.y) /*self.center*/, [sender locationInView:self]);
-        CGFloat incrementRadians = increment(self.lastAngle, theta);
-        
+        CGFloat incrementRadians = increment(self.currentAngle, theta);
+        self.sum_increment += incrementRadians;
         self.clockwise = (incrementRadians > 0);
-        self.collectionViewLayout.rotate += incrementRadians;
+        
+        CGFloat new = self.startRotate + self.sum_increment;
+        CGFloat min = 0;
+#warning TODO 最大
+        CGFloat max = -MAXFLOAT;
+        CGFloat constrained = fmin(min, fmax(new, max));
+        rotate = constrained + (new - constrained) / 2;
+        
+        self.collectionViewLayout.rotate = rotate;
         [self reloadData];
         
-        self.lastAngle = theta;
+        self.currentAngle = theta;
     } else if (sender.state == UIGestureRecognizerStateEnded ||
                sender.state == UIGestureRecognizerStateCancelled) {
-        if (self.collectionViewLayout.rotate > 0) {
-            self.collectionViewLayout.rotate = 0;
-            [self reloadData];
-        } else {
-            [self addDecayRotateAnimationWithVelocity:sender];
-        }
+        [self addDecayRotateAnimationWithVelocity:sender];
     }
 }
 
@@ -113,22 +98,44 @@ CGPoint pointAddVector(CGPoint point, CGPoint vector) {
     CGPoint location = [sender locationInView:self];
     CGFloat radius = sqrt(pow(/*self.center.x - */location.x, 2) + pow(self.center.y - location.y, 2));
     CGFloat distance = (self.clockwise ? 1 : -1) * sqrt(pow(location.x - velocity.x, 2) + pow(location.y - velocity.y, 2)) / radius;
-    if (fabsf(distance) < 3.5) return;
-    
-    POPDecayAnimation *anim = [POPDecayAnimation animation];
-    anim.velocity = [NSNumber numberWithFloat:distance];
-    anim.deceleration = 0.998;
-    anim.property = [POPAnimatableProperty propertyWithName:@"count" initializer:^(POPMutableAnimatableProperty *prop) {
-        prop.readBlock = ^(CircleLayout *obj, CGFloat values[]) {
-            values[0] = obj.rotate;
-        };
-        prop.writeBlock = ^(CircleLayout *obj, const CGFloat values[]) {
-            obj.rotate = values[0];
-            [self reloadData];
-        };
-        prop.threshold = 0.01;
-    }];
-    [self.collectionViewLayout pop_addAnimation:anim forKey:nil];
+
+    BOOL outsideBoundsMinimum = self.collectionViewLayout.rotate > 0;
+#warning TODO 最大
+    BOOL outsideBoundsMaximum = self.collectionViewLayout.rotate < -MAXFLOAT;
+
+    if (outsideBoundsMaximum || outsideBoundsMinimum) {
+        POPSpringAnimation *springAnimation = [POPSpringAnimation animation];
+        springAnimation.property = [POPAnimatableProperty propertyWithName:@"bounce" initializer:^(POPMutableAnimatableProperty *prop) {
+            prop.readBlock = ^(CircleLayout *obj, CGFloat values[]) {
+                values[0] = obj.rotate;
+            };
+            prop.writeBlock = ^(CircleLayout *obj, const CGFloat values[]) {
+                obj.rotate = values[0];
+                [self reloadData];
+            };
+            prop.threshold = 0.01;
+        }];
+        springAnimation.velocity = [NSNumber numberWithFloat:distance];
+        springAnimation.toValue = [NSNumber numberWithFloat:0];
+        springAnimation.springBounciness = 0.0;
+        springAnimation.springSpeed = 5.0;
+        [self.collectionViewLayout pop_addAnimation:springAnimation forKey:@"bounce"];
+    } else if (fabs(distance) >= 3.5) {
+        POPDecayAnimation *anim = [POPDecayAnimation animation];
+        anim.velocity = [NSNumber numberWithFloat:distance];
+        anim.deceleration = 0.998;
+        anim.property = [POPAnimatableProperty propertyWithName:@"decelerate" initializer:^(POPMutableAnimatableProperty *prop) {
+            prop.readBlock = ^(CircleLayout *obj, CGFloat values[]) {
+                values[0] = obj.rotate;
+            };
+            prop.writeBlock = ^(CircleLayout *obj, const CGFloat values[]) {
+                obj.rotate = values[0];
+                [self reloadData];
+            };
+            prop.threshold = 0.01;
+        }];
+        [self.collectionViewLayout pop_addAnimation:anim forKey:@"decelerate"];
+    }
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
