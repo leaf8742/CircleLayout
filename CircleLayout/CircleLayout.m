@@ -32,6 +32,8 @@ const CGFloat end = 1;
     _center = CGPointMake(size.width / 2.0, size.height / 2.0);
     _radius = MIN(size.width, size.height) / 2;
     _radius -= ITEM_SIZE / 2;
+    _magnifierBeginRadius = average * 3;
+    _magnifierEndRadius = average * 5;
 }
 
 - (CGSize)collectionViewContentSize {
@@ -50,23 +52,37 @@ const CGFloat end = 1;
     CGFloat var = -(self.rotate - offset) / average;
     CGFloat begin = floorf(var);
     CGFloat end = (kAmazonCount - hiddenCount) + begin;
+    const CGFloat itemRadian = (2 * path.item * M_PI / visibleCount - 0.5 * M_PI + offset);
+    const CGFloat modItemRadian = fmod(itemRadian, 2 * M_PI);
+    const CGFloat constraintMagnifierBeginRadius = fmod(self.magnifierBeginRadius, 2 * M_PI);
+    const CGFloat constraintMagnifierEndRadius = fmod(self.magnifierEndRadius, 2 * M_PI);
     
     if ([path row] >= begin && [path row] < end) {
         // 位置
-        CGPoint p = CGPointMake(_radius * cosf(2 * path.item * M_PI / visibleCount - 0.5 * M_PI + offset),
-                                _radius * sinf(2 * path.item * M_PI / visibleCount - 0.5 * M_PI + offset));
-        
-        CGFloat s = p.x * cosf(self.rotate) - p.y * sinf(self.rotate);
-        CGFloat t = p.x * sinf(self.rotate) + p.y * cosf(self.rotate);
-        attributes.center = CGPointMake(/*_center.x + */s, _center.y + t);
+        CGPoint p = CGPointMake(_radius * cosf(itemRadian + self.rotate),
+                                _radius * sinf(itemRadian + self.rotate));
+        attributes.center = CGPointMake(/*_center.x + */p.x, _center.y + p.y);
         
         // 缩放
         if ([path row] == begin) {
+            // 第1个
             attributes.alpha = 1 - (var - begin);
 //            attributes.transform3D = CATransform3DMakeScale(1 - (var - begin), 1 - (var - begin), 1);
         } else if ([path row] == end - 1) {
+            // 当前显示的最后一个
             attributes.alpha = var - begin;
 //            attributes.transform3D = CATransform3DMakeScale(var - begin, var - begin, 1);
+/*        } else if (modItemRadian > constraintMagnifierBeginRadius && itemRadian < constraintMagnifierEndRadius) {
+            // 放大镜区域内的
+
+            // 放大镜弧长
+            CGFloat radiansDistance = (constraintMagnifierEndRadius - constraintMagnifierBeginRadius);
+            // 放大镜中心点弧度
+            CGFloat centerRadians = constraintMagnifierBeginRadius + radiansDistance / 2;
+            // 位置比例点
+            CGFloat scale = 1 - fabs((centerRadians - modItemRadian) / (radiansDistance / 2));
+            
+            attributes.transform3D = CATransform3DMakeScale(scale, scale, 1);*/
         } else {
             attributes.alpha = 1;
         }

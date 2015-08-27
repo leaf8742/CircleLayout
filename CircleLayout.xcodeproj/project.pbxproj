@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		091F1B4B1B8EA6510081C1FB /* GeometryAssist.m in Sources */ = {isa = PBXBuildFile; fileRef = 091F1B4A1B8EA6510081C1FB /* GeometryAssist.m */; };
 		094F59FA19E8E0EA009BB2CA /* CollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 094F59F919E8E0EA009BB2CA /* CollectionView.m */; };
 		09E8C3751A6505130065E24D /* CoordinatingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09E8C3741A6505130065E24D /* CoordinatingController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		09FEB61E19B6B50B00952538 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09FEB61D19B6B50B00952538 /* Default-568h@2x.png */; };
@@ -24,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		091F1B491B8EA6200081C1FB /* GeometryAssist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeometryAssist.h; sourceTree = "<group>"; };
+		091F1B4A1B8EA6510081C1FB /* GeometryAssist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeometryAssist.m; sourceTree = "<group>"; };
 		094F59F819E8E0EA009BB2CA /* CollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionView.h; sourceTree = "<group>"; };
 		094F59F919E8E0EA009BB2CA /* CollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionView.m; sourceTree = "<group>"; };
 		09E8C3731A6505130065E24D /* CoordinatingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoordinatingController.h; sourceTree = "<group>"; };
@@ -124,6 +127,8 @@
 				094F59F819E8E0EA009BB2CA /* CollectionView.h */,
 				094F59F919E8E0EA009BB2CA /* CollectionView.m */,
 				77AF007D157FA442001EC3FB /* Supporting Files */,
+				091F1B491B8EA6200081C1FB /* GeometryAssist.h */,
+				091F1B4A1B8EA6510081C1FB /* GeometryAssist.m */,
 			);
 			path = CircleLayout;
 			sourceTree = "<group>";
@@ -257,6 +262,7 @@
 				77AF008A157FA442001EC3FB /* ViewController.m in Sources */,
 				77AF0097157FA528001EC3FB /* Cell.m in Sources */,
 				094F59FA19E8E0EA009BB2CA /* CollectionView.m in Sources */,
+				091F1B4B1B8EA6510081C1FB /* GeometryAssist.m in Sources */,
 				77AF0098157FA528001EC3FB /* CircleLayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
