@@ -53,9 +53,12 @@ const CGFloat end = 1;
     CGFloat begin = floorf(var);
     CGFloat end = (kAmazonCount - hiddenCount) + begin;
     const CGFloat itemRadian = (2 * path.item * M_PI / visibleCount - 0.5 * M_PI + offset);
-    const CGFloat modItemRadian = fmod(itemRadian, 2 * M_PI);
+    const CGFloat modItemRadian = fmod(2 * path.item * M_PI / visibleCount + self.rotate + offset, 2 * M_PI);
     const CGFloat constraintMagnifierBeginRadius = fmod(self.magnifierBeginRadius, 2 * M_PI);
     const CGFloat constraintMagnifierEndRadius = fmod(self.magnifierEndRadius, 2 * M_PI);
+    const CGFloat magnifierDistance = fabs(constraintMagnifierBeginRadius - constraintMagnifierEndRadius);
+    const CGFloat constraintMagnifierCenterRadius = constraintMagnifierBeginRadius + magnifierDistance / 2;
+    NSLog(@"%.2f, %.2f, %.2f", modItemRadian, constraintMagnifierBeginRadius, constraintMagnifierEndRadius);
     
     if ([path row] >= begin && [path row] < end) {
         // 位置
@@ -72,17 +75,10 @@ const CGFloat end = 1;
             // 当前显示的最后一个
             attributes.alpha = var - begin;
 //            attributes.transform3D = CATransform3DMakeScale(var - begin, var - begin, 1);
-/*        } else if (modItemRadian > constraintMagnifierBeginRadius && itemRadian < constraintMagnifierEndRadius) {
-            // 放大镜区域内的
-
-            // 放大镜弧长
-            CGFloat radiansDistance = (constraintMagnifierEndRadius - constraintMagnifierBeginRadius);
-            // 放大镜中心点弧度
-            CGFloat centerRadians = constraintMagnifierBeginRadius + radiansDistance / 2;
-            // 位置比例点
-            CGFloat scale = 1 - fabs((centerRadians - modItemRadian) / (radiansDistance / 2));
-            
-            attributes.transform3D = CATransform3DMakeScale(scale, scale, 1);*/
+        } else if (modItemRadian > constraintMagnifierBeginRadius && modItemRadian < constraintMagnifierEndRadius) {
+            // 在放大镜区域内，放大
+            CGFloat scale = 2 - fabs(constraintMagnifierCenterRadius - modItemRadian) / (magnifierDistance / 2);
+            attributes.transform3D = CATransform3DMakeScale(scale, scale, 1);
         } else {
             attributes.alpha = 1;
         }
