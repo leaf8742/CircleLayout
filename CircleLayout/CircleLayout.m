@@ -32,8 +32,8 @@ const CGFloat end = 1;
     _center = CGPointMake(size.width / 2.0, size.height / 2.0);
     _radius = MIN(size.width, size.height) / 2;
     _radius -= ITEM_SIZE / 2;
-    _magnifierBeginRadius = average * 3;
-    _magnifierEndRadius = average * 5;
+    _magnifierBeginRadius = average * 2;
+    _magnifierEndRadius = average * 6;
 }
 
 - (CGSize)collectionViewContentSize {
@@ -58,7 +58,7 @@ const CGFloat end = 1;
     const CGFloat constraintMagnifierEndRadius = fmod(self.magnifierEndRadius, 2 * M_PI);
     const CGFloat magnifierDistance = fabs(constraintMagnifierBeginRadius - constraintMagnifierEndRadius);
     const CGFloat constraintMagnifierCenterRadius = constraintMagnifierBeginRadius + magnifierDistance / 2;
-    NSLog(@"%.2f, %.2f, %.2f", modItemRadian, constraintMagnifierBeginRadius, constraintMagnifierEndRadius);
+    attributes.alpha = 1;
     
     if ([path row] >= begin && [path row] < end) {
         // 位置
@@ -71,16 +71,16 @@ const CGFloat end = 1;
             // 第1个
             attributes.alpha = 1 - (var - begin);
 //            attributes.transform3D = CATransform3DMakeScale(1 - (var - begin), 1 - (var - begin), 1);
-        } else if ([path row] == end - 1) {
+        }
+        if ([path row] == end - 1) {
             // 当前显示的最后一个
             attributes.alpha = var - begin;
 //            attributes.transform3D = CATransform3DMakeScale(var - begin, var - begin, 1);
-        } else if (modItemRadian > constraintMagnifierBeginRadius && modItemRadian < constraintMagnifierEndRadius) {
+        }
+        if (modItemRadian > constraintMagnifierBeginRadius && modItemRadian < constraintMagnifierEndRadius) {
             // 在放大镜区域内，放大
             CGFloat scale = 2 - fabs(constraintMagnifierCenterRadius - modItemRadian) / (magnifierDistance / 2);
             attributes.transform3D = CATransform3DMakeScale(scale, scale, 1);
-        } else {
-            attributes.alpha = 1;
         }
     } else {
         attributes.alpha = 0;

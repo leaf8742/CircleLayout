@@ -1,4 +1,4 @@
-#define ITEM_SIZE 35
+#define ITEM_SIZE 30
 #define kAmazonCount 16
 
 #import <UIKit/UIKit.h>

@@ -28,7 +28,7 @@
 - (void)viewDidLoad {
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    self.cellCount = 16;
+    self.cellCount = 32;
     self.collectionView = [[CollectionView alloc] initWithFrame:self.collectionView.frame collectionViewLayout:self.collectionViewLayout];
     [self.collectionView setDelegate:self];
     [self.collectionView setDataSource:self];
